@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+div.kid-field label{
+  text-align: right;
+}
+
+input[type="text"], input[type="number"],input[type="checkbox"],textarea{
+  /* font-size: smaller; */
+  border:none;
+}

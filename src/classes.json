@@ -1,0 +1,58 @@
+{   
+    "Bookworm": {
+        "keySkills": [
+            "calculate",
+            "investigate",
+            "comprehend"
+        ]
+    },
+    "Computer Geek": {
+        "keySkills": [
+            "calculate",
+            "program",
+            "comprehend"
+        ]
+    },
+    "Hick": {
+        "keySkills": [
+            "force",
+            "move",
+            "tractor"
+        ]
+    },
+    "Jock": {
+        "keySkills": [
+            "force",
+            "move",
+            "contact"
+        ]
+    },
+    "Popular Kid": {
+        "keySkills": [
+            "contact",
+            "charm",
+            "lead"
+        ]
+    },
+    "Rocker": {
+        "keySkills": [
+            "move",
+            "charm",
+            "empathize"
+        ]
+    },
+    "Troublemaker": {
+        "keySkills": [
+            "force",
+            "sneak",
+            "lead"
+        ]
+    },
+    "Weirdo": {
+        "keySkills": [
+            "sneak",
+            "investigate",
+            "empathize"
+        ]
+    }
+}
