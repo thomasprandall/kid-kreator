@@ -30,48 +30,48 @@ const Relationship = ({ rel, selectedKid }) => (
   </div>
 )
 
-const Item = (row, {selectedKid}) => (
-  <>
-    <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-      <div className='item-field flex'>
-        <label htmlFor={'item_' + row} className='mr-2 flex-nowrap'>{row + 1}.</label>
-        <input type='text' name={'item_' + row} id={'item_' + row} className='grow' defaultValue={selectedKid.items[row]} />
-      </div>
-    </div>
-  </>
-)
+// const Item = (row, {selectedKid}) => (
+//   <>
+//     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
+//       <div className='item-field flex'>
+//         <label htmlFor={'item_' + row} className='mr-2 flex-nowrap'>{row + 1}.</label>
+//         <input type='text' name={'item_' + row} id={'item_' + row} className='grow' defaultValue={selectedKid.items[row]} />
+//       </div>
+//     </div>
+//   </>
+// )
 
-const HideoutDetail = function (row,{ selectedKid }) {
-  let feature = selectedKid.hideout.details[row];
-  return (
-    <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-      <div className='item-field'>
-        <input type='text' name={'hideout_' + row} id={'item_' + row} className='w-full' defaultValue={feature} />
-      </div>
-    </div>
-  )
-}
+// const HideoutDetail = function (row,{ selectedKid }) {
+//   let feature = selectedKid.hideout.details[row];
+//   return (
+//     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
+//       <div className='item-field'>
+//         <input type='text' name={'hideout_' + row} id={'item_' + row} className='w-full' defaultValue={feature} />
+//       </div>
+//     </div>
+//   )
+// }
 
-const HideoutRows = function(maxRows, {selectedKid}){
-  let hideoutArray = [];
-  for (let i = 0; i < maxRows; i++) {
-    hideoutArray.push(<HideoutDetail row={i} selectedKid={selectedKid} />)
-  }
+// const HideoutRows = function(maxRows, {selectedKid}){
+//   let hideoutArray = [];
+//   for (let i = 0; i < maxRows; i++) {
+//     hideoutArray.push(<HideoutDetail row={i} selectedKid={selectedKid} />)
+//   }
 
-  return (
-    {hideoutArray}
-  )
-};
+//   return (
+//     {hideoutArray}
+//   )
+// };
 
-const ItemRows = function(maxRows, {selectedKid}){
-  let itemArray = [];
-  for (let i = 0; i < maxRows; i++) {
-    itemArray.push(<Item row={i} selectedKid={selectedKid} />);
-  }
-  return(
-    {itemArray}
-  )
-};
+// const ItemRows = function(maxRows, {selectedKid}){
+//   let itemArray = [];
+//   for (let i = 0; i < maxRows; i++) {
+//     itemArray.push(<Item row={i} selectedKid={selectedKid} />);
+//   }
+//   return(
+//     {itemArray}
+//   )
+// };
 
 const AgeAlert = ({validAge}) => {
   return (
@@ -81,13 +81,13 @@ const AgeAlert = ({validAge}) => {
 
 const expMax = 10;
 const luckMax = 5;
-const itemMax = 5;
-const hideoutMax = 6;
+// const itemMax = 5;
+// const hideoutMax = 6;
 
 const expBoxes = [];
 const luckBoxes = [];
-const itemRows = [];
-const hideoutRows = [];
+// const itemRows = [];
+// const hideoutRows = [];
 
 for (let i = 0; i < expMax; i++) {
   expBoxes.push(<input type='checkbox' name={'exp_' + i} className="exp-box" disabled={i > 0} key={'exp_'+i} />);
@@ -117,12 +117,12 @@ function App() {
         .then((resp) => resp.json())
         .then((data) => {
           kidsSet(data);
-          changeKid(data[0]);
+          selectedKidSet(data[0]);
           localStorage.setItem("kids",JSON.stringify(data));
         });
     } else {
       kidsSet(savedKids);
-      changeKid(savedKids[0]);
+      selectedKidSet(savedKids[0]);
     }
   },[]);
 
