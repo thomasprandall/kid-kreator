@@ -5,8 +5,6 @@ import { Disclosure } from '@headlessui/react';
 import './App.css';
 
 import { Navbar } from './components/navbar';
-
-// import kids from './kids.json';
 import classes from './classes.json';
 
 const Header = () => {
@@ -15,11 +13,12 @@ const Header = () => {
   )
 };
 
-const Kid = ({ kid, selectedKid, onClick }) => (
+const Kid = ({ kid, selectedKid, onClick, deleteClick, index }) => (
   <>
-    <Disclosure className={(kid.id === selectedKid.id ? 'bg-orange' : '') + ' p-1 border-solid border-b-2'} onClick={() => onClick(kid)}>
+    <Disclosure className={(kid.name === selectedKid.name ? 'bg-orange' : '') + ' p-1 border-solid border-b-2'} onClick={() => onClick(kid)}>
       <h1>
         {kid.name}, {kid.type}
+        <span className="float-right" onClick={(index) => deleteClick(index)}>X</span>
       </h1>
     </Disclosure>
   </>
@@ -35,8 +34,8 @@ const Item = (row, {selectedKid}) => (
   <>
     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
       <div className='item-field flex'>
-        <label htmlFor={'item_' + selectedKid.id + '_' + row} className='mr-2 flex-nowrap'>{row + 1}.</label>
-        <input type='text' name={'item_' + selectedKid.id + '_' + row} id={'item_' + selectedKid.id + '_' + row} className='grow' defaultValue={selectedKid.items[row]} />
+        <label htmlFor={'item_' + row} className='mr-2 flex-nowrap'>{row + 1}.</label>
+        <input type='text' name={'item_' + row} id={'item_' + row} className='grow' defaultValue={selectedKid.items[row]} />
       </div>
     </div>
   </>
@@ -47,7 +46,7 @@ const HideoutDetail = function (row,{ selectedKid }) {
   return (
     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
       <div className='item-field'>
-        <input type='text' name={'hideout_' + selectedKid.id + '_' + row} id={'item_' + selectedKid.id + '_' + row} className='w-full' defaultValue={feature} />
+        <input type='text' name={'hideout_' + row} id={'item_' + row} className='w-full' defaultValue={feature} />
       </div>
     </div>
   )
@@ -155,56 +154,123 @@ function App() {
     return attributeTotal;
   };
 
-  const updateAttribute = useCallback((key, value, id) => {
+  const updateAttribute = useCallback((key, value, index) => {
     const newAttributes = { ...selectedKid.attributes, [key]: value*1 }
     const newKid = {...selectedKid, attributes: newAttributes};
     selectedKidSet(newKid);
 
-    updateKidList(newKid,id-1);
+    updateKidList(newKid,index);
     
     validateAge(selectedKid.age, newAttributes);
     attributeTotalSet(getAttributeTotal(newAttributes));
   },[selectedKid, updateKidList, validateAge]);
 
-  const updateCondition = useCallback((key, value, id) => {
-    let newKid = JSON.parse(JSON.stringify(kids[id - 1]));;
+  const updateCondition = useCallback((key, value, index) => {
+    let newKid = JSON.parse(JSON.stringify(kids[index]));
     newKid.conditions[key] = value * 1;
     
     selectedKidSet(newKid);
 
-    updateKidList(newKid, id - 1);
+    updateKidList(newKid, index);
   }, [kids, updateKidList]);
   
-  const updateSkill = useCallback((key, value, id) => {
-    let newKid = JSON.parse(JSON.stringify(kids[id - 1]));;
+  const updateSkill = useCallback((key, value, index) => {
+    let newKid = JSON.parse(JSON.stringify(kids[index]));;
     newKid.skills[key] = value * 1;
     selectedKidSet(newKid);
 
     let updatedKids = [...kids];
-    updatedKids[id - 1] = newKid;
+    updatedKids[index] = newKid;
     kidsSet(updatedKids);
   }, [kids]);
 
-  const updateKidDetails = useCallback((key, value, id) => {
-    console.log(key, value, id);
-    let newKid = JSON.parse(JSON.stringify(kids[id - 1]));;
+  const updateKidDetails = useCallback((key, value, index) => {
+    console.log(key, value, index);
+    let newKid = JSON.parse(JSON.stringify(kids[index]));;
     newKid[key] = value;
     selectedKidSet(newKid);
 
-    updateKidList(newKid, id - 1);
+    updateKidList(newKid, index);
 
     if (key === 'age') {
       validateAge(value, selectedKid.attributes);
     }
   }, [kids, selectedKid, updateKidList, validateAge]);  
 
-  const changeKid = (kid) => {
+  const changeKid = useCallback((kid) => {
     selectedKidSet(kid);
-
+    
     validateAge(kid.age, kid.attributes);
 
     attributeTotalSet(getAttributeTotal(kid.attributes));
-  };
+  },[validateAge]);
+
+  const createKid = useCallback(() => {
+    let newKid = JSON.parse(JSON.stringify(kids[kids.length-1]));
+    
+    const kidKeys = Object.keys(newKid);
+
+    kidKeys.forEach((key, val) => {
+      console.log(key,val);
+      newKid[key] = "";
+    });
+
+    const randNum = Math.random();
+    newKid.name = "New Kid " + randNum;
+    newKid.type = "Popular Kid";
+    newKid.age = 10;
+    newKid.luck = 5;
+   
+    newKid.conditions = {
+      "upset": false,
+      "scared": false,
+      "exhausted": false,
+      "injured": false,
+      "broken": false
+    };
+    newKid.attributes = {
+      "body": 0,
+      "tech": 0,
+      "heart": 0,
+      "mind": 0
+    };
+    newKid.skills = {
+      "sneak": 0,
+      "force": 0,
+      "move": 0,
+      "tinker": 0,
+      "program": 0,
+      "calculate": 0,
+      "contact": 0,
+      "charm": 0,
+      "lead": 0,
+      "investigate": 0,
+      "comprehend": 0,
+      "empathize": 0
+    }
+    newKid.relationships = [];
+    newKid.items = [];
+    newKid.hideout = {
+      "name": "Hideout",
+      "details": []
+    }
+
+    kidsSet([...kids, newKid]);
+
+    changeKid(newKid);
+  },[kids,changeKid]);
+
+  const deleteKid = useCallback((index) => {
+    console.log('Delete kid',index);
+    let updatedKids = JSON.parse(JSON.stringify(kids));
+    updatedKids.splice(index,1);
+
+    kidsSet(updatedKids);
+
+    localStorage.setItem("kids",JSON.stringify(updatedKids));
+    console.log('Change Kid to ',kids[0]);
+    changeKid(kids[0]);
+  },[kids,changeKid])
 
   if (!kids || !selectedKid) {
     return <div>Loading data</div>;
@@ -215,9 +281,10 @@ function App() {
       <Header />
       <div className='kid-container flex flex-row'>
         <div className='kid-list'>
-          {kids.map((item) => (
-            <Kid kid={item} selectedKid={selectedKid} kids={kids} key={'kid_' + item.id} onClick={(item) => changeKid(item)} />
+          {kids.map((item, index) => (
+            <Kid kid={item} selectedKid={selectedKid} key={'kid_' + kids.findIndex((kid) => kid.name === item.name)} onClick={(item) => changeKid(item)} deleteClick={() => deleteKid(index)} index={index} />
           ))}
+          <div className='text-center m-2'><button onClick={createKid} className='px-2 py-1 border-solid border-2 rounded-lg bg-white text-black hover:bg-orange'>Add Kid</button></div>
           <div className='kid-help'>
             <div className='kid-header'>Help</div>
             <div>
@@ -249,19 +316,19 @@ function App() {
                       return( 
                         <div className={(i % 2 ? 'bg-tan' : 'bg-orange-light') + ' flex border-solid border-b-2'} key={key}>
                           <div className='grow w-4/6 capitalize p-1'>
-                            <label htmlFor={key + "_" + selectedKid.id} className='align-middle'>{key}</label>
+                            <label htmlFor={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)} className='align-middle'>{key}</label>
                           </div>
-                          <div className=' shrink w-2/6 p-1'>
+                          <div className='shrink w-2/6 p-1'>
                             <input 
                               type="number" 
-                              id={key + "_" + selectedKid.id}
-                              name={key + "_" + selectedKid.id} 
+                              id={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}
+                              name={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)} 
                               value={ selectedKid.attributes[key] }
                               max="5"
                               min="1"
                               className={(i % 2 ? 'bg-tan' : 'bg-orange-light')}
                               size="2"
-                              onChange={(evt) => updateAttribute(key, evt.target.value, selectedKid.id)} /> 
+                              onChange={(evt) => updateAttribute(key, evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} /> 
                           </div>
                         </div>
                       )
@@ -276,16 +343,16 @@ function App() {
                     return (
                       <div className={(i % 2 ? 'bg-tan' : 'bg-orange-light') + ' flex border-solid border-b-2'} key={key}>
                         <div className='grow w-5/6 capitalize p-1'>
-                          <label htmlFor={key + "_" + selectedKid.id}>{key}</label>
+                          <label htmlFor={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}>{key}</label>
                         </div>
                         <div className='shrink w-1/6 p-1'>
                           <input
-                            id={key + "_" + selectedKid.id}
+                            id={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}
                             type="checkbox"
-                            name={key + "_" + selectedKid.id}
+                            name={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}
                             checked={selectedKid.conditions[key]}
                             value="true"
-                            onChange={(evt) => updateCondition(key, evt.target.checked, selectedKid.id)}
+                            onChange={(evt) => updateCondition(key, evt.target.checked, kids.findIndex((kid) => kid.name === selectedKid.name))}
                           />
                         </div>
                       </div>
@@ -301,19 +368,19 @@ function App() {
                     return (
                       <div className={(i % 2 ? 'bg-tan' : 'bg-orange-light') + ' flex border-solid border-b-2'} key={key}>
                         <div className='grow w-4/6 capitalize p-1'>
-                          <label htmlFor={key + "_" + selectedKid.id}>{key}</label>
+                          <label htmlFor={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}>{key}</label>
                         </div>
                         <div className='shrink w-2/6 p-1'>
                           <input
                             type="number"
-                            id={key + "_" + selectedKid.id}
-                            name={key + "_" + selectedKid.id}
+                            id={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}
+                            name={key + "_" + kids.findIndex((kid) => kid.name === selectedKid.name)}
                             value={selectedKid.skills[key]}
                             max={classes[selectedKid.type].keySkills.find(skill => skill === key) ? 3:1}
                             min="0"
                             className={(i % 2 ? 'bg-tan' : 'bg-orange-light')}
                             size="2"
-                            onChange={(evt) => updateSkill(key, evt.target.value, selectedKid.id)} />
+                            onChange={(evt) => updateSkill(key, evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} />
                         </div>
                       </div>
                     )
@@ -336,23 +403,22 @@ function App() {
               <div className='kid-header'>Kid Details</div>
               <div className='flex flex-wrap field-row'>
                 <div className='kid-field grow'>
-                  <label htmlFor={'name_' + selectedKid.id} className='inline-block w-20'>Name:</label>
-                  <input name={'name_' + selectedKid.id} id={'name_' + selectedKid.id} type='text' value={selectedKid.name} onChange={(evt) => updateKidDetails('name', evt.target.value, selectedKid.id)} className='m-1 w-auto md:w-9/12' />
+                  <label htmlFor={'name_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='inline-block w-20'>Name:</label>
+                  <input name={'name_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'name_' + kids.findIndex((kid) => kid.name === selectedKid.name)} type='text' value={selectedKid.name} onChange={(evt) => updateKidDetails('name', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} className='m-1 w-auto md:w-9/12' />
                 </div>
-                <div className='kid-field grow lg:grow-0'>
-                  <label htmlFor={'type_' + selectedKid.id} className='inline-block w-20'>Type:</label>
-                  <select name={'type_' + selectedKid.id} id={'type_' + selectedKid.id} type='text' className='m-1 w-auto md:w-9/12 lg:w-7/12' value={selectedKid.type} onChange={(evt) => updateKidDetails('type', evt.target.value, selectedKid.id)} >
+                <div className='kid-field grow'>
+                  <select name={'type_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'type_' + kids.findIndex((kid) => kid.name === selectedKid.name)} type='text' className='m-1 w-11/12' value={selectedKid.type} onChange={(evt) => updateKidDetails('type', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} >
                     { typeOptions }
                   </select>
                 </div>
               </div>
               <div className='flex flex-wrap field-row'>
                 <div className='kid-field grow'>
-                  <label htmlFor={'age_' + selectedKid.id} className='inline-block w-20'>Age:</label>
-                  <input name={'age_' + selectedKid.id} id={'age_' + selectedKid.id} type='number' value={selectedKid.age} onChange={(evt) => updateKidDetails('age', evt.target.value, selectedKid.id)} min="10" max="15" className='m-1 w-auto md:w-9/12' />
+                  <label htmlFor={'age_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='inline-block w-20'>Age:</label>
+                  <input name={'age_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'age_' + kids.findIndex((kid) => kid.name === selectedKid.name)} type='number' value={selectedKid.age} onChange={(evt) => updateKidDetails('age', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} min="10" max="15" className='m-1 w-auto md:w-9/12' />
                 </div>
                 <div className='kid-field grow bg-orange-light align-middle'>
-                  <label htmlFor={'luck_' + selectedKid.id} className='inline-block w-20'>Luck Points:</label>
+                  <label htmlFor={'luck_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='inline-block w-20'>Luck Points:</label>
                   <div className='inline-block'>
                     {luckBoxes}
                   </div>
@@ -360,30 +426,30 @@ function App() {
               </div>
               <div className='flex flex-wrap field-row'>
                 <div className='kid-field grow'>
-                  <label htmlFor={'drive_' + selectedKid.id} className='inline-block w-20'>Drive:</label>
-                  <input name={'drive_' + selectedKid.id} id={'drive_' + selectedKid.id} type='text' value={selectedKid.drive} onChange={(evt) => updateKidDetails('drive', evt.target.value, selectedKid.id)} className='m-1 w-auto md:w-9/12' />
+                  <label htmlFor={'drive_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='inline-block w-20'>Drive:</label>
+                  <input name={'drive_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'drive_' + kids.findIndex((kid) => kid.name === selectedKid.name)} type='text' value={selectedKid.drive} onChange={(evt) => updateKidDetails('drive', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} className='m-1 w-auto md:w-9/12' />
                 </div>
                 <div className='kid-field grow lg:grow-0'>
-                  <label htmlFor={'anchor_' + selectedKid.id} className='inline-block w-20'>Anchor:</label>
-                  <input name={'anchor_' + selectedKid.id} id={'anchor_' + selectedKid.id} type='text' value={selectedKid.anchor} onChange={(evt) => updateKidDetails('anchor', evt.target.value, selectedKid.id)} className='m-1 w-auto md:w-9/12 lg:w-8/12' />
+                  <label htmlFor={'anchor_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='inline-block w-20'>Anchor:</label>
+                  <input name={'anchor_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'anchor_' + kids.findIndex((kid) => kid.name === selectedKid.name)} type='text' value={selectedKid.anchor} onChange={(evt) => updateKidDetails('anchor', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))} className='m-1 w-auto md:w-9/12 lg:w-8/12' />
                 </div>
               </div>
               <div className='field-row'>
                 <div className='kid-field p2'>
-                  <p><label htmlFor={'problem_' + selectedKid.id} className=''>Problem:</label></p>
-                  <textarea name={'problem_' + selectedKid.id} id={'problem_' + selectedKid.id} className='w-full' value={selectedKid.problem} onChange={(evt) => updateKidDetails('problem', evt.target.value, selectedKid.id)}></textarea>
+                  <p><label htmlFor={'problem_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className=''>Problem:</label></p>
+                  <textarea name={'problem_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'problem_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='w-full' value={selectedKid.problem} onChange={(evt) => updateKidDetails('problem', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))}></textarea>
                 </div>
               </div>
               <div className='field-row'>
                 <div className='kid-field'>
-                  <p><label htmlFor={'pride_' + selectedKid.id} className=''>Pride: <span className='float-right'>Checked? <input type='checkbox' name={'prideUsed_' + selectedKid.id} className='float-right' /></span></label></p>
-                  <textarea name={'pride_' + selectedKid.id} id={'pride_' + selectedKid.id} className='w-full' value={selectedKid.pride} onChange={(evt) => updateKidDetails('pride', evt.target.value, selectedKid.id)}></textarea>
+                  <p><label htmlFor={'pride_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className=''>Pride: <span className='float-right'>Checked? <input type='checkbox' name={'prideUsed_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='float-right' /></span></label></p>
+                  <textarea name={'pride_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'pride_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='w-full' value={selectedKid.pride} onChange={(evt) => updateKidDetails('pride', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))}></textarea>
                 </div>
               </div>
               <div className='field-row'>
                 <div className='kid-field'>
-                  <p><label htmlFor={'description_' + selectedKid.id} className=''>Description:</label></p>
-                  <textarea name={'description_' + selectedKid.id} id={'description_' + selectedKid.id} className='w-full' value={selectedKid.description} onChange={(evt) => updateKidDetails('description', evt.target.value, selectedKid.id)}></textarea>
+                  <p><label htmlFor={'description_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className=''>Description:</label></p>
+                  <textarea name={'description_' + kids.findIndex((kid) => kid.name === selectedKid.name)} id={'description_' + kids.findIndex((kid) => kid.name === selectedKid.name)} className='w-full' value={selectedKid.description} onChange={(evt) => updateKidDetails('description', evt.target.value, kids.findIndex((kid) => kid.name === selectedKid.name))}></textarea>
                 </div>
               </div>
             </div>
@@ -402,7 +468,7 @@ function App() {
             </div>
             <div className='kid-notes border-solid border-2 bg-tan'>
               <div className='kid-header'>Notes</div>
-              <textarea name={'notes_' + selectedKid.id} defaultValue={selectedKid.notes} className='w-full h-80'></textarea>
+              <textarea name={'notes_' + kids.findIndex((kid) => kid.name === selectedKid.name)} defaultValue={selectedKid.notes} className='w-full h-80'></textarea>
             </div> 
           </div>
           
