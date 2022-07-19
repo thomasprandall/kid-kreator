@@ -16,7 +16,8 @@ module.exports = {
       'black': '#000000',
       'white': '#FFFFFF',
       'tan': '#FCE5D2',
-      'orange-light': '#F9BD8C'
+      'orange-light': '#F9BD8C',
+      'warning': '#CC3300'
     },
     extend: {},
   },

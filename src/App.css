@@ -45,3 +45,43 @@ input[type="text"], input[type="number"],input[type="checkbox"],textarea{
   /* font-size: smaller; */
   border:none;
 }
+
+.item-field{
+  @apply px-1 w-full flex;
+}
+
+.exp-box, .luck-box{
+  @apply flex-row my-1 mx-2;
+}
+
+.kid-list{
+  @apply p-1 md:p-3 flex-none w-auto md:w-64 bg-yellow border-solid border-r-2;
+}
+
+.kid-header{
+  @apply bg-black text-white p-1;
+}
+
+.kid-attributes, .kid-experience, .kid-conditions, .kid-skills, .kid-help, .kid-details{
+  @apply border-solid border-2 border-b-0 mt-2;
+}
+
+.kid-experience, .kid-help{
+  @apply border-b-2;
+}
+
+.kid-attributes, .kid-details{
+  @apply mt-0;
+}
+
+.field-row{
+  @apply border-solid border-b-2 py-2;
+}
+
+.kid-field > p > label{
+  @apply ml-2;
+}
+
+.kid-field > textarea{
+  @apply h-40;
+}

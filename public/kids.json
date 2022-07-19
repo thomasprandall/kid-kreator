@@ -1,0 +1,265 @@
+[
+    {
+        "id": 1,
+        "name": "Simon",
+        "type": "Popular Kid",
+        "age": 15,
+        "luck": 0,
+        "drive": "I hate secrets.",
+        "anchor": "Dad",
+        "problem": "My aunt lives in our basement and she is crazy.",
+        "pride": "Everybody likes me.",
+        "prideUsed": false,
+        "description": "",
+        "favoriteSong": "",
+        "attributes": {
+            "body": 3,
+            "tech": 3,
+            "heart": 5,
+            "mind": 4
+        },
+        "conditions": {
+            "upset": false,
+            "scared": false,
+            "exhausted": false,
+            "injured": false,
+            "broken": true
+        },
+        "skills": {
+            "sneak": 1,
+            "force": 0,
+            "move": 0,
+            "tinker": 0,
+            "program": 0,
+            "calculate": 0,
+            "contact": 1,
+            "charm": 3,
+            "lead": 3,
+            "investigate": 0,
+            "comprehend": 1,
+            "empathize": 1
+        },
+        "relationships": [
+            {
+                "kid": "Ramsay",
+                "relationship": "He is useful"
+            },
+            {
+                "kid": "Tucker",
+                "relationship": "I know he loves me"
+            }
+        ],
+        "items": [
+            "Disposable Camera",
+            "Gameboy",
+            "Full bottle of Coke",
+            "Bubblegum"
+        ],
+        "hideout": {
+            "name": "Hideout",
+            "details": [
+                "Firepole",
+                "Lookout tower",
+                "Periscope"
+            ]
+        },
+        "notes": ""
+    },
+    {
+        "id": 2,
+        "name": "Ramsay",
+        "type": "Jock",
+        "age": 13,
+        "luck": 2,
+        "drive": "",
+        "anchor": "",
+        "problem": "",
+        "pride": "",
+        "prideUsed": false,
+        "description": "",
+        "favoriteSong": "",
+        "attributes": {
+            "body": 5,
+            "tech": 3,
+            "heart": 3,
+            "mind": 2
+        },
+        "conditions": {
+            "upset": false,
+            "scared": true,
+            "exhausted": false,
+            "injured": false,
+            "broken": false
+        },
+        "skills": {
+            "sneak": 0,
+            "force": 3,
+            "move": 3,
+            "tinker": 0,
+            "program": 0,
+            "calculate": 0,
+            "contact": 3,
+            "charm": 1,
+            "lead": 0,
+            "investigate": 0,
+            "comprehend": 0,
+            "empathize": 0
+        },
+        "relationships": [
+            {
+                "kid": "Ramsay",
+                "relationship": "Best Friends"
+            }
+        ],
+        "items": [],
+        "hideout": {
+            "name": "Hideout",
+            "details": []
+        },
+        "notes": ""
+    },
+    {
+        "id": 3,
+        "name": "Charlie",
+        "type": "Weirdo",
+        "age": 12,
+        "luck": 3,
+        "drive": "",
+        "anchor": "",
+        "problem": "",
+        "pride": "",
+        "prideUsed": false,
+        "description": "",
+        "favoriteSong": "",
+        "attributes": {
+            "body": 4,
+            "tech": 1,
+            "heart": 5,
+            "mind": 2
+        },
+        "conditions": {
+            "upset": false,
+            "scared": false,
+            "exhausted": false,
+            "injured": false,
+            "broken": false
+        },
+        "skills": {
+            "sneak": 1,
+            "force": 1,
+            "move": 1,
+            "tinker": 0,
+            "program": 0,
+            "calculate": 0,
+            "contact": 1,
+            "charm": 1,
+            "lead": 0,
+            "investigate": 2,
+            "comprehend": 0,
+            "empathize": 3
+        },
+        "relationships": [],
+        "items": [],
+        "hideout": {
+            "name": "Hideout",
+            "details": []
+        },
+        "notes": ""
+    },
+    {
+        "id": 4,
+        "name": "Ripley",
+        "type": "Troublemaker",
+        "age": 11,
+        "luck": 4,
+        "drive": "",
+        "anchor": "",
+        "problem": "",
+        "pride": "",
+        "prideUsed": false,
+        "description": "",
+        "favoriteSong": "",
+        "attributes": {
+            "body": 4,
+            "tech": 2,
+            "heart": 4,
+            "mind": 1
+        },
+        "conditions": {
+            "upset": false,
+            "scared": false,
+            "exhausted": false,
+            "injured": false,
+            "broken": false
+        },
+        "skills": {
+            "sneak": 3,
+            "force": 3,
+            "move": 1,
+            "tinker": 0,
+            "program": 0,
+            "calculate": 0,
+            "contact": 1,
+            "charm": 1,
+            "lead": 0,
+            "investigate": 0,
+            "comprehend": 0,
+            "empathize": 0
+        },
+        "relationships": [],
+        "items": [],
+        "hideout": {
+            "name": "Hideout",
+            "details": []
+        },
+        "notes": ""
+    },
+    {
+        "id": 5,
+        "name": "Tucker",
+        "type": "Computer Geek",
+        "age": 14,
+        "luck": 1,
+        "drive": "",
+        "anchor": "",
+        "problem": "",
+        "pride": "",
+        "prideUsed": false,
+        "description": "",
+        "favoriteSong": "",
+        "attributes": {
+            "body": 2,
+            "tech": 3,
+            "heart": 4,
+            "mind": 5
+        },
+        "conditions": {
+            "upset": false,
+            "scared": false,
+            "exhausted": false,
+            "injured": true,
+            "broken": false
+        },
+        "skills": {
+            "sneak": 1,
+            "force": 0,
+            "move": 0,
+            "tinker": 0,
+            "program": 2,
+            "calculate": 2,
+            "contact": 0,
+            "charm": 0,
+            "lead": 1,
+            "investigate": 1,
+            "comprehend": 3,
+            "empathize": 0
+        },
+        "relationships": [],
+        "items": [],
+        "hideout": {
+            "name": "Hideout",
+            "details": []
+        },
+        "notes": ""
+    }
+]
