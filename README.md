@@ -1,3 +1,20 @@
+# Notes from Thomas
+
+This was a random passion project I started to help me visualize/validate character creation for a cool TTRPG called Tales from the Loop. This game is not an open game license game so I am limited in how I can distribute this and as such this repository will likely remain private.
+
+I've always felt that using technology is the best way to learn it. Having not used React much over the last couple of years I used this project (and a couple of others) to re-introduce myself to React and all of its friends. Some items of particular focus while working on this project include:
+
+* useState and useEffect
+* useCallback
+* BrowserRouter, Routes, and Route ()
+* Controlled Inputs
+* Local Storage
+* Tailwind UI
+
+Historically, I have been more comfortable with Angular and Bootstrap so I used this project as a means to try a couple of different tools at the same time. Similarly, I've worked on another TTRPG game tool for Vaesen using React and ChakraUI.
+
+There are a few known issues that I tinker with when I have time.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

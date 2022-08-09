@@ -7,9 +7,9 @@ import './App.css';
 import { Navbar } from './components/navbar';
 import classes from './classes.json';
 
-const Header = () => {
+const Header = (selectedKid) => {
   return (
-    <Navbar />
+    <Navbar props={selectedKid} />
   )
 };
 
@@ -22,56 +22,51 @@ const Kid = ({ kid, selectedKid, onClick, deleteClick, index }) => (
       </h1>
     </Disclosure>
   </>
+);
+
+const Item = (props) => (
+  <>
+    <div className={(props.row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
+      <div className='item-field flex'>
+        <label htmlFor={'item_' + props.row} className='mr-2 flex-nowrap'>{props.row + 1}.</label>
+        <input type='text' name={'item_' + props.row} id={'item_' + props.row} className='grow' defaultValue={props.selectedKid.items[props.row]} />
+      </div>
+    </div>
+  </>
 )
 
-const Relationship = ({ rel, selectedKid }) => (
-  <div className={(rel.index < selectedKid.relationships.length ? 'border-b-2':'border-b-0') + ' p-3'}>
-    <input type='text' defaultValue={rel.kid} className='sm:block sm:w-full sm:mb-1 md:inline md:w-1/5' /> <input type='text' defaultValue={rel.relationship} className='sm:block sm:w-full md:inline md:w-3/4' />
-  </div>
-)
+const HideoutDetail = function (props) {
+  let feature = props.selectedKid.hideout.details[props.row];
 
-// const Item = (row, {selectedKid}) => (
-//   <>
-//     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-//       <div className='item-field flex'>
-//         <label htmlFor={'item_' + row} className='mr-2 flex-nowrap'>{row + 1}.</label>
-//         <input type='text' name={'item_' + row} id={'item_' + row} className='grow' defaultValue={selectedKid.items[row]} />
-//       </div>
-//     </div>
-//   </>
-// )
+  return (
+    <div className={(props.row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
+      <div className='item-field'>
+        <input type='text' name={'hideout_' + props.row} id={'item_' + props.row} className='w-full' defaultValue={feature} />
+      </div>
+    </div>
+  )
+}
 
-// const HideoutDetail = function (row,{ selectedKid }) {
-//   let feature = selectedKid.hideout.details[row];
-//   return (
-//     <div className={(row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-//       <div className='item-field'>
-//         <input type='text' name={'hideout_' + row} id={'item_' + row} className='w-full' defaultValue={feature} />
-//       </div>
-//     </div>
-//   )
-// }
+const HideoutRows = function(props){
+  let hideoutArray = [];
+  for (let i = 0; i < props.maxRows; i++) {
+    hideoutArray.push(<HideoutDetail row={i} selectedKid={props.selectedKid} key={'hd_'+i} />)
+  }
 
-// const HideoutRows = function(maxRows, {selectedKid}){
-//   let hideoutArray = [];
-//   for (let i = 0; i < maxRows; i++) {
-//     hideoutArray.push(<HideoutDetail row={i} selectedKid={selectedKid} />)
-//   }
+  return (
+    hideoutArray
+  )
+};
 
-//   return (
-//     {hideoutArray}
-//   )
-// };
-
-// const ItemRows = function(maxRows, {selectedKid}){
-//   let itemArray = [];
-//   for (let i = 0; i < maxRows; i++) {
-//     itemArray.push(<Item row={i} selectedKid={selectedKid} />);
-//   }
-//   return(
-//     {itemArray}
-//   )
-// };
+const ItemRows = function(props){
+  const itemArray = [];
+  for (let i = 0; i < props.maxRows; i++) {
+    itemArray.push(<Item row={i} selectedKid={props.selectedKid} key={i} />);
+  }
+  return(
+    itemArray
+  )
+};
 
 const AgeAlert = ({validAge}) => {
   return (
@@ -79,23 +74,23 @@ const AgeAlert = ({validAge}) => {
   )
 }
 
-const expMax = 10;
-const luckMax = 5;
-// const itemMax = 5;
-// const hideoutMax = 6;
+const Relationship = (props) => (
+  <div className='p-3'>
+    <input type='text' name="relationship_kid" value={props.selectedKid.relationships[props.row]?.kid} className='sm:block sm:w-full sm:mb-1 md:inline md:w-1/5 mr-1' onChange={(evt) => props.updateRelationship(props.row, 'kid', evt.target.value)} />
+    <input type='text' name="relationship_relationship" value={props.selectedKid.relationships[props.row]?.relationship} className='sm:block sm:w-full md:inline md:w-3/4 mr-1' onChange={(evt) => props.updateRelationship(props.row, 'relationship', evt.target.value)} />
+    <button onClick={() => props.deleteRelationship(props.row)}>X</button>
+  </div>
+)
 
-const expBoxes = [];
-const luckBoxes = [];
-// const itemRows = [];
-// const hideoutRows = [];
-
-for (let i = 0; i < expMax; i++) {
-  expBoxes.push(<input type='checkbox' name={'exp_' + i} className="exp-box" disabled={i > 0} key={'exp_'+i} />);
-}
-
-for (let i = 0; i < luckMax; i++) {
-  luckBoxes.push(<input type='checkbox' name={'luck_' + i} className='luck-box' key={'luck_' + i} />);
-}
+const RelationshipRows = function (props) {
+  const relationshipArray = [];
+  for (let i = 0; i < props.maxRows; i++) {
+    relationshipArray.push(<Relationship row={i} selectedKid={props.selectedKid} key={i} deleteRelationship={props.deleteRelationship} updateRelationship={props.updateRelationship} />);
+  }
+  return (
+    relationshipArray
+  )
+};
 
 const kidTypes = Object.keys(classes);
 const typeOptions = [];
@@ -127,7 +122,6 @@ function App() {
   },[]);
 
   const [selectedKid, selectedKidSet] = useState(null);
-
   const [validAge, validAgeSet] =  useState(true);
   const [attributeTotal, attributeTotalSet] = useState(0);
 
@@ -185,7 +179,6 @@ function App() {
   }, [kids]);
 
   const updateKidDetails = useCallback((key, value, index) => {
-    console.log(key, value, index);
     let newKid = JSON.parse(JSON.stringify(kids[index]));;
     newKid[key] = value;
     selectedKidSet(newKid);
@@ -211,7 +204,6 @@ function App() {
     const kidKeys = Object.keys(newKid);
 
     kidKeys.forEach((key, val) => {
-      console.log(key,val);
       newKid[key] = "";
     });
 
@@ -261,26 +253,59 @@ function App() {
   },[kids,changeKid]);
 
   const deleteKid = useCallback((index) => {
-    console.log('Delete kid',index);
     let updatedKids = JSON.parse(JSON.stringify(kids));
     updatedKids.splice(index,1);
 
     kidsSet(updatedKids);
 
     localStorage.setItem("kids",JSON.stringify(updatedKids));
-    console.log('Change Kid to ',kids[0]);
+    
     changeKid(kids[0]);
-  },[kids,changeKid])
+  },[kids,changeKid]);
+
+  const updateRelationship = useCallback((row, field, value) => {
+    const kidIndex = kids.findIndex((kid) => kid.name === selectedKid.name);
+
+    let newKid = JSON.parse(JSON.stringify(selectedKid));
+    
+    newKid.relationships[row][field] = value;
+    
+    selectedKidSet(newKid);
+
+    updateKidList(newKid, kidIndex);
+  }, [kids, selectedKid, updateKidList]);
+
+  const deleteRelationship = useCallback((index) => {
+
+    updateRelationship(index,'kid','');
+    updateRelationship(index, 'relationship', '');
+
+  }, [updateRelationship]
+  );
 
   if (!kids || !selectedKid) {
     return <div>Loading data</div>;
   }
 
+  const expMax = 10;
+  const luckMax = 5;
+
+  const expBoxes = [];
+  const luckBoxes = [];
+
+  for (let i = 0; i < expMax; i++) {
+    expBoxes.push(<input type='checkbox' name={'exp_' + i} className="exp-box" key={'exp_' + i} />);
+  }
+
+  for (let i = 0; i < luckMax; i++) {
+    luckBoxes.push(<input type='checkbox' name={'luck_' + i} className='luck-box' disabled={i >= 15 - selectedKid.age} key={'luck_' + i} />);
+  }
+
   return (
     <div className="app-wrapper container mx-auto">
-      <Header />
+      <Header selectedKid={selectedKid} kids={kids} />
       <div className='kid-container flex flex-row'>
-        <div className='kid-list'>
+        <div className='kid-list hidden md:block'>
           {kids.map((item, index) => (
             <Kid kid={item} selectedKid={selectedKid} key={'kid_' + kids.findIndex((kid) => kid.name === item.name)} onClick={(item) => changeKid(item)} deleteClick={() => deleteKid(index)} index={index} />
           ))}
@@ -307,10 +332,10 @@ function App() {
           </div>
         </div>
         <div className='kid-container w-full flex flex-wrap row' >
-          <div className='kid-alt-tables p-3 w-auto md:w-96'>
+          <div className='kid-alt-tables p-3 w-full lg:w-96'>
             <div className='kid-attributes border-b-0'>
               <div className='kid-header'>Attributes <span className='float-right'><span id="attribute-total">{ attributeTotal }</span>/{selectedKid.age}</span></div>
-              <div className='kid-alt-table w-full'>
+              <div className='kid-alt-table w-full lg:w-auto'>
                   <AgeAlert validAge={validAge} />
                   { Object.keys(selectedKid.attributes).map(function(key,i) {
                       return( 
@@ -397,7 +422,7 @@ function App() {
               </div>
             </div>
           </div>
-          <div className='kid-character p-3 grow'>
+          <div className='kid-character p-3 basis-80 grow'>
              
             <div className='kid-details bg-tan'>
               <div className='kid-header'>Kid Details</div>
@@ -456,15 +481,15 @@ function App() {
           
             <div className='kid-relationships border-solid border-2 bg-tan'>
               <div className='kid-header'>Relationships</div>
-              {selectedKid.relationships.map((rel,i) => (<Relationship rel={rel} index={i} selectedKid={selectedKid}  />))}
+              <RelationshipRows maxRows='5' selectedKid={selectedKid} deleteRelationship={deleteRelationship} updateRelationship={updateRelationship} />
             </div>
             <div className='kid-items border-solid border-2 bg-tan'>
               <div className='kid-header'>Items</div>
-              {/* <ItemRows maxRows='5' selectedKid={selectedKid} /> */}
+              <ItemRows maxRows='5' selectedKid={selectedKid} />
             </div>
             <div className='kid-hideout border-solid border-2 bg-tan'>
-              <div className='kid-header'>{ selectedKid.hideout.name }</div>
-              {/* <HideoutRows selectedKid={selectedKid} maxRows='6' /> */}
+              <div className='kid-header hideout'>{ selectedKid.hideout.name }</div>
+              <HideoutRows selectedKid={selectedKid} maxRows='6' />
             </div>
             <div className='kid-notes border-solid border-2 bg-tan'>
               <div className='kid-header'>Notes</div>
