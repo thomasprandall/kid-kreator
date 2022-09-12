@@ -4,14 +4,10 @@ import { useState, useCallback, useEffect } from 'react';
 import { Disclosure } from '@headlessui/react';
 import './App.css';
 
-import { Navbar } from './components/navbar';
-import classes from './classes.json';
+import { Header, AgeAlert } from './components/layout';
+import { HideoutDetail, Item, Relationship } from './components/form';
 
-const Header = (selectedKid) => {
-  return (
-    <Navbar props={selectedKid} />
-  )
-};
+import classes from './classes.json';
 
 const Kid = ({ kid, selectedKid, onClick, deleteClick, index }) => (
   <>
@@ -23,29 +19,6 @@ const Kid = ({ kid, selectedKid, onClick, deleteClick, index }) => (
     </Disclosure>
   </>
 );
-
-const Item = (props) => (
-  <>
-    <div className={(props.row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-      <div className='item-field flex'>
-        <label htmlFor={'item_' + props.row} className='mr-2 flex-nowrap'>{props.row + 1}.</label>
-        <input type='text' name={'item_' + props.row} id={'item_' + props.row} className='grow' defaultValue={props.selectedKid.items[props.row]} />
-      </div>
-    </div>
-  </>
-)
-
-const HideoutDetail = function (props) {
-  let feature = props.selectedKid.hideout.details[props.row];
-
-  return (
-    <div className={(props.row < 5 ? 'border-b-2' : 'border-b-0') + ' p-3 flex'}>
-      <div className='item-field'>
-        <input type='text' name={'hideout_' + props.row} id={'item_' + props.row} className='w-full' defaultValue={feature} />
-      </div>
-    </div>
-  )
-}
 
 const HideoutRows = function(props){
   let hideoutArray = [];
@@ -68,20 +41,6 @@ const ItemRows = function(props){
   )
 };
 
-const AgeAlert = ({validAge}) => {
-  return (
-    <div className={(validAge ? 'hidden' : 'block') + ' box-shadow shadow-lg bg-warning text-white p-1 text-center text-sm'}>Attributes Exceed Age!</div>
-  )
-}
-
-const Relationship = (props) => (
-  <div className='p-3'>
-    <input type='text' name="relationship_kid" value={props.selectedKid.relationships[props.row]?.kid} className='sm:block sm:w-full sm:mb-1 md:inline md:w-1/5 mr-1' onChange={(evt) => props.updateRelationship(props.row, 'kid', evt.target.value)} />
-    <input type='text' name="relationship_relationship" value={props.selectedKid.relationships[props.row]?.relationship} className='sm:block sm:w-full md:inline md:w-3/4 mr-1' onChange={(evt) => props.updateRelationship(props.row, 'relationship', evt.target.value)} />
-    <button onClick={() => props.deleteRelationship(props.row)}>X</button>
-  </div>
-)
-
 const RelationshipRows = function (props) {
   const relationshipArray = [];
   for (let i = 0; i < props.maxRows; i++) {
@@ -98,8 +57,6 @@ const typeOptions = [];
 kidTypes.forEach(type => {
   typeOptions.push(<option value={type} key={'type_' + type}>{type}</option>);
 });
-
-
 
 function App() {
   const [kids, kidsSet] = useState([]);
