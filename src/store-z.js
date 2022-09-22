@@ -10,12 +10,49 @@ const useKidStore = create(
             kids: [],
             fetch: async () => {
                 const response = await fetch(kidAPI);
-                set({ kids: await response.json() });
+                set({ kids: await response.json(), kid: response.json()[0] });
             },
-            setKids: (kids) => set(state => (state.kids = kids)),
-            selectKid: (id) => set(state => (state.kid = state.kids[id])),
+            /*setKids: (kids) => set(state => (state.kids = kids)),*/
+            setKids: (kids) => {
+                //console.log(kids);
+                //console.log(set);
+                
+                set((state) => {
+                    
+                    var newState = {
+                        kids: kids,
+                        kid: state.kid
+                    };
+                    //state.kids = kids;
+                    
+                    //console.log(state.kids = kids);
+                    
+                    return newState;
+                });
+                
+            },
+            selectKid: (id) => {
+                set((state) => {
+                    
+                    var newState = {
+                        kids: state.kids,
+                        kid: state.kids[id]
+                    }
+                    
+                    return newState;
+                });
+            },
             addKid: () => {
-                set(state => (state.kids = [...state.kids, {...state.kids[state.kids.length-1], name: "New Kid"}]))
+                set((state) => {
+                    
+                    var newState = {
+                        kids: [...state.kids, {...state.kids[state.kids.length-1], name: "New Kid"}],
+                        kid: state.kid
+                    };
+                    
+                    //state.kids = [...state.kids, {...state.kids[state.kids.length-1], name: "New Kid"}];
+                    return newState;
+                });
             }
         }),
         {

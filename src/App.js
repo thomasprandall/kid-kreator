@@ -62,13 +62,18 @@ function App() {
   
   if (!kids.length){
     kidFetch();
-  } else if (!Object.keys(selectedKid).length) {
+  } else if (!selectedKid || !Object.keys(selectedKid).length) {
     selectKid(0);
   }
 
-  const selectedKidID = getKidID(selectedKid, kids);
+  var selectedKidID = 0;
+  
+  if(selectedKid){
+    selectedKidID = getKidID(selectedKid, kids);
+  }
 
   const deleteKid = (id) => {
+    
     let newKids = JSON.parse(JSON.stringify(kids));
     if(id < kids.length){
       newKids.splice(id, 1);
