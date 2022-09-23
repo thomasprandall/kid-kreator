@@ -12,25 +12,7 @@ const useKidStore = create(
                 const response = await fetch(kidAPI);
                 set({ kids: await response.json(), kid: response.json()[0] });
             },
-            /*setKids: (kids) => set(state => (state.kids = kids)),*/
-            setKids: (kids) => {
-                //console.log(kids);
-                //console.log(set);
-                
-                set((state) => {
-                    
-                    var newState = {
-                        kids: kids,
-                        kid: state.kid
-                    };
-                    //state.kids = kids;
-                    
-                    //console.log(state.kids = kids);
-                    
-                    return newState;
-                });
-                
-            },
+            setKids: (kids) => {set((state) => state.kids = kids)},
             selectKid: (id) => {
                 set((state) => {
                     
